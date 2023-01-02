@@ -1,9 +1,14 @@
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.text.html.ImageView;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class Utility{
 
@@ -58,5 +63,24 @@ public class Utility{
             throw new RuntimeException(e);
         }
         return images;
+    }
+
+    public static void displayImage(String outImageFilePath) {
+        // read the output image file
+        File outputImageFile = new File(outImageFilePath);
+        Image outputImage = null;
+        try {
+            outputImage = ImageIO.read(outputImageFile);
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading output image file: " + outImageFilePath);
+        }
+
+        JLabel outputImageLabel = new JLabel(new ImageIcon(outputImage));
+
+        JFrame frame = new JFrame("Output Image");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(outputImageLabel, BorderLayout.CENTER);
+        frame.pack();
+        frame.setVisible(true);
     }
 }

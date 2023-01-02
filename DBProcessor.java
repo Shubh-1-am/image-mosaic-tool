@@ -5,10 +5,10 @@ import java.io.*;
 import java.net.URI;
 
 public class DBProcessor {
-    int width;
-    String inDirPath;
-    String outDirPath;
-    File inDir;
+    private final int width;
+    private String inDirPath;
+    private String outDirPath;
+    private final File inDir;
 
     private PrintWriter csvWriter;
     public DBProcessor(String inDirPath, String outDirPath, int width) {
@@ -113,7 +113,5 @@ public class DBProcessor {
         }
     }
 
-    public static void main(String[] args) {
-        new DBProcessor("SourceImages","New",32);
-    }
+
 }

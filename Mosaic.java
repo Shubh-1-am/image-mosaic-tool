@@ -10,8 +10,8 @@ public class Mosaic{
 
     private BufferedImage inputImage;
     private HashMap<String,BufferedImage> cache;
-    private int tileSize;
-    String[][] assembledTiles;
+    private final int tileSize;
+
 
     public Mosaic(String inputImagePath, int width ,  String dbFilePath, int tileSize) throws IOException {
         this.tileSize = tileSize;
@@ -27,13 +27,14 @@ public class Mosaic{
         String fileBaseName = new File(inputImagePath).getName();
         String scaledImagePath = "Scale_Image_"+ fileBaseName;
         ImageIO.write(inputImage,"jpg",new File(scaledImagePath));
-        assembledTiles = new String[width/tileSize][width/tileSize];
+
         ArrayList<SourceImage> sourceImages = Utility.loadSourceImages(dbFilePath);
         cache = new HashMap<>();
         assemble(sourceImages);
 
         String outImageFilePath = "OUTPUT_Image_" + fileBaseName;
         ImageIO.write(inputImage, "jpg", new File(outImageFilePath));
+        Utility.displayImage(outImageFilePath);
 
 
     }
@@ -43,7 +44,7 @@ public class Mosaic{
             for (int j = 0 ; j < inputImage.getWidth(); j += tileSize){
                 BufferedImage patch = inputImage.getSubimage(j,i,tileSize,tileSize);
                 String closestMatch = getClosest(patch,sourceImages);
-                assembledTiles[j/tileSize][i/tileSize] = closestMatch;
+
 
                 BufferedImage closestMatchImage = null;
                 if (!cache.containsKey(closestMatch)) {
@@ -79,6 +80,7 @@ public class Mosaic{
                 closestSourceImage = si;
             }
         }
+        assert closestSourceImage != null;
         return closestSourceImage.getImagePath();
     }
 
@@ -90,7 +92,5 @@ public class Mosaic{
         return Math.sqrt(distance);
     }
 
-    public static void main(String[] args) throws IOException {
-        new Mosaic("Shubham.jpeg",512,"New/Processed.csv",8);
-    }
+
 }
